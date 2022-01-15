@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "900456313480",
+    "project_id": "hayah-cl",
+    "storage_bucket": "hayah-cl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900456313480:android:95bb0500f9a3a49df3a53d",
+        "android_client_info": {
+          "package_name": "developer.omar.hayahclinic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900456313480-04eoikpa3shfl3kf7q6fi5crg0qdumnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzxTvYcbSm5pHZJLHtHAJGJ2dyinpRNS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900456313480-04eoikpa3shfl3kf7q6fi5crg0qdumnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
