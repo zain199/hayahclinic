@@ -51,7 +51,7 @@ class HomeLayout extends StatelessWidget {
 
            ),
 
-             body: DefualtButton(
+             body: DefaultButton(
                child: Text('logout'),
                fun: (){
                  Logout(context);

@@ -3,29 +3,30 @@ import 'package:Hayah_Clinic/shared/widgets/DefualtTextButton.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class GoogleSignInButtom extends StatelessWidget {
+class GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(4),
-      child: DefualtButton(
+      child: DefaultButton(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FaIcon(FontAwesomeIcons.google, color: Colors.red),
-              SizedBox(width: 5.0,),
+              FaIcon(FontAwesomeIcons.google ,color: Colors.red, ),
+              SizedBox(width: 10.0,),
               Text(
                 'Sign In With Google',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.subtitle2,
               )
             ],
           ),
+
           fun: () {
           final cubit = LoginCubit.get(context);
           cubit.userGoogleLogin(context);
           },
-        color: Colors.grey[300],
+        color: Colors.indigo,
       )
     );
   }
