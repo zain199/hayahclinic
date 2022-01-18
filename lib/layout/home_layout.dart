@@ -51,11 +51,13 @@ class HomeLayout extends StatelessWidget {
 
            ),
 
-             body: DefaultButton(
-               child: Text('logout'),
-               fun: (){
-                 Logout(context);
-               },
+             body: SafeArea(
+               child: DefaultButton(
+                 child: Text('logout'),
+                 fun: (){
+                   Logout(context);
+                 },
+               ),
              )
            // ConditionalBuilder(
            //   condition: cubit.model!=null,

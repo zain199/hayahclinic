@@ -1,8 +1,11 @@
 import 'package:Hayah_Clinic/layout/home_layout.dart';
+import 'package:Hayah_Clinic/models/login_model.dart';
 import 'package:Hayah_Clinic/modules/loginscreen/cubit/login_cubit_states.dart';
+import 'package:Hayah_Clinic/modules/register_screen/cubit/register_cubit.dart';
 import 'package:Hayah_Clinic/shared/constants.dart';
 import 'package:Hayah_Clinic/shared/methods.dart';
 import 'package:Hayah_Clinic/shared/network/local/Cache_Helper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +17,7 @@ class LoginCubit extends Cubit<LoginStates> {
   static LoginCubit get(context) => BlocProvider.of(context);
 
   bool isPassword = true;
+  static bool googleSignInStatus=false;
 
   void setVis() {
     isPassword = !isPassword;
@@ -21,7 +25,6 @@ class LoginCubit extends Cubit<LoginStates> {
   }
 
   final googleSignIn = GoogleSignIn();
-
   Future userGoogleLogin(context) async {
     if (await checkInternet()) {
       final user = await googleSignIn.signIn();
@@ -29,7 +32,6 @@ class LoginCubit extends Cubit<LoginStates> {
         return;
       } else {
         final googleAuth = await user.authentication;
-
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
@@ -37,8 +39,21 @@ class LoginCubit extends Cubit<LoginStates> {
 
         FirebaseAuth.instance.signInWithCredential(credential).then((value) {
           if (value.user.uid != null) {
-            //toastMessage(msg: value.user.email, state: 0);
             uId = value.user.uid;
+            User user=value.user;
+            googleSignInFirstTime(uId,context).then((value) {
+              if(value) {
+                saveUserRegister(
+                  context: context,
+                  name: user.displayName,
+                  phone: user.phoneNumber,
+                  email: user.email,
+                  image: user.photoURL,
+                  uid: user.uid,
+                );
+              }
+            });
+            googleSignInStatus=true;
             Cache_Helper.setData('uid', uId);
             NavigateToAndKill(context, HomeLayout());
           }
@@ -47,6 +62,50 @@ class LoginCubit extends Cubit<LoginStates> {
       }
     } else
       showSnackBar(context);
+  }
+
+  void saveUserRegister({
+    @required context,
+    @required String name,
+    @required String phone,
+    @required String email,
+    @required String uid,
+    @required String image,
+  }) async {
+    if (await checkInternet()) {
+      Map<String, dynamic> data =
+      LoginModel(name, phone??'0123456789', email, uid, image).toMap();
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .set(data)
+          .then((value) {
+      }).catchError((onError) {
+        print(onError.toString());
+      });
+    } else
+      showSnackBar(context);
+  }
+
+  Future<bool> googleSignInFirstTime(String uid,context)async
+  {
+    if(await checkInternet())
+      {
+        QuerySnapshot<Map<String,dynamic>> data=await FirebaseFirestore.instance
+            .collection("users")
+            .where('uid',isEqualTo: uid)
+            .get();
+
+        if(data.docs.length==0)
+          return true;
+      }else
+        {
+          showSnackBar(context);
+        }
+
+
+   return false;
+
   }
 
   void userLogin(
@@ -65,7 +124,7 @@ class LoginCubit extends Cubit<LoginStates> {
         }
         emit(LoginSuccessState(true));
       }).catchError((onError) {
-        toastMessage(msg: onError.toString(), state: 2);
+        toastMessage(msg: 'Username or Password is Incorrect', state: 2);
         emit(LoginErrorState());
       });
     } else

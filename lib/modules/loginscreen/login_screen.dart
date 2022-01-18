@@ -79,11 +79,12 @@ class LoginScreen extends StatelessWidget {
                                 cubit.setVis();
                               },
                               onSubmitted: (value) {
-                                if (formKey.currentState.validate())
+                                if (formKey.currentState.validate()) {
                                   cubit.userLogin(
                                       context: context,
                                       email: email.text,
                                       password: pass.text);
+                                }
                               },
                               isPassword: cubit.isPassword,
                               prefixicon: Icon(Icons.lock),
@@ -95,24 +96,24 @@ class LoginScreen extends StatelessWidget {
                                 return null;
                               },
                               type: TextInputType.visiblePassword,
-
                             ),
                             const SizedBox(
                               height: 20.0,
                             ),
                             ConditionalBuilder(
-                              condition: state is! LoginLoadingState,
+                              condition: state is !LoginLoadingState,
                               builder: (context) => Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(18.0)),
                                 child: DefaultButton(
                                     fun: () {
-                                      if (formKey.currentState.validate())
+                                      if (formKey.currentState.validate()) {
                                         cubit.userLogin(
                                             context: context,
                                             email: email.text,
                                             password: pass.text);
+                                      }
                                     },
                                     child: Text(
                                       'LOGIN',

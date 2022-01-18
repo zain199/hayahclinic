@@ -50,6 +50,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         NavigateToAndKill(context, HomeLayout());
         emit(RegisterSuccessState(false));
       }).catchError((onError) {
+        toastMessage(msg: 'Invalid Data', state: 2);
         emit(RegisterErrorState());
       });
     } else
@@ -75,7 +76,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
           .then((value) {
         emit(RegisterSuccessState(true));
       }).catchError((onError) {
-        print(onError.toString());
+        toastMessage(msg: 'Something Went Wrong', state: 2);
         emit(RegisterErrorState());
       });
     } else

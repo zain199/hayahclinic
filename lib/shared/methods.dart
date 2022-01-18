@@ -1,3 +1,4 @@
+import 'package:Hayah_Clinic/modules/loginscreen/cubit/login_cubit.dart';
 import 'package:Hayah_Clinic/modules/loginscreen/login_screen.dart';
 import 'package:Hayah_Clinic/shared/constants.dart';
 import 'package:Hayah_Clinic/shared/network/local/Cache_Helper.dart';
@@ -5,6 +6,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void NavigateTo(context, widget) {
   Navigator.push(
@@ -56,10 +58,15 @@ BuildContext getCurrentContext()
 
 void Logout(context) async
 {
-  uId = null;
-  Cache_Helper.removeData('uId');
-  FirebaseAuth.instance.signOut();
-  NavigateToAndKill(context, LoginScreen());
+
+  Cache_Helper.removeData('uid');
+  if(LoginCubit.googleSignInStatus) {
+    GoogleSignIn().signOut();
+    LoginCubit.googleSignInStatus=false;
+  }
+    FirebaseAuth.instance.signOut();
+    NavigateToAndKill(context, LoginScreen());
+
 }
 
 Future<bool> checkInternet() {
