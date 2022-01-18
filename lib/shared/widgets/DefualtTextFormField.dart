@@ -1,4 +1,5 @@
 
+import 'package:Hayah_Clinic/shared/styles/colors.dart';
 import 'package:flutter/material.dart';
 
 class DefaultTextFormField extends StatelessWidget {
@@ -40,16 +41,15 @@ class DefaultTextFormField extends StatelessWidget {
         keyboardType: type,
         controller: controller,
         decoration: InputDecoration(
-
           suffixIcon: IconButton(
-            icon: Icon(suffixicon,color: Colors.white,),
+            icon: Icon(suffixicon,color: defColor,),
             onPressed: sufOnPressed,
           ),
-          prefixIcon: Icon(prefixicon.icon,color: Colors.white,),
+          prefixIcon: Icon(prefixicon.icon,color: defColor,),
           hintText: hint,
-          // hintStyle: TextStyle(
-          //   color: Colors.white
-          // ),
+           hintStyle: TextStyle(
+             color: Colors.grey
+           ),
 
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),

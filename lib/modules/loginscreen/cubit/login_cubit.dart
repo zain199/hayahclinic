@@ -21,57 +21,54 @@ class LoginCubit extends Cubit<LoginStates> {
   }
 
   final googleSignIn = GoogleSignIn();
-  Future userGoogleLogin(context) async
-  {
 
-    final user = await googleSignIn.signIn();
-    if (user == null) {
-      return;
-    } else {
-      final googleAuth = await user.authentication;
+  Future userGoogleLogin(context) async {
+    if (await checkInternet()) {
+      final user = await googleSignIn.signIn();
+      if (user == null) {
+        return;
+      } else {
+        final googleAuth = await user.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
 
-      FirebaseAuth.instance.signInWithCredential(credential).then((value) {
+        FirebaseAuth.instance.signInWithCredential(credential).then((value) {
+          if (value.user.uid != null) {
+            //toastMessage(msg: value.user.email, state: 0);
+            uId = value.user.uid;
+            Cache_Helper.setData('uid', uId);
+            NavigateToAndKill(context, HomeLayout());
+          }
+          emit(LoginSuccessState(true));
+        });
+      }
+    } else
+      showSnackBar(context);
+  }
 
-        if(value.user.uid!=null)
-        {
+  void userLogin(
+      {@required context, @required email, @required password}) async {
+    if (await checkInternet()) {
+      emit(LoginLoadingState());
+
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        if (value.user.uid != null) {
           //toastMessage(msg: value.user.email, state: 0);
           uId = value.user.uid;
           Cache_Helper.setData('uid', uId);
           NavigateToAndKill(context, HomeLayout());
         }
         emit(LoginSuccessState(true));
-
+      }).catchError((onError) {
+        toastMessage(msg: onError.toString(), state: 2);
+        emit(LoginErrorState());
       });
-
-    }
-  }
-
-
-  void userLogin({@required context,@required email, @required password}) {
-    emit(LoginLoadingState());
-
-    FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password
-    ).then((value) {
-      if(value.user.uid!=null)
-        {
-          //toastMessage(msg: value.user.email, state: 0);
-          uId = value.user.uid;
-          Cache_Helper.setData('uid', uId);
-          NavigateToAndKill(context, HomeLayout());
-        }
-      emit(LoginSuccessState(true));
-    }).catchError((onError){
-      toastMessage(msg: onError.toString(), state: 2);
-      emit(LoginErrorState());
-    });
-
-
+    } else
+      showSnackBar(context);
   }
 }

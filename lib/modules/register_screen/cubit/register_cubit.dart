@@ -22,30 +22,38 @@ class RegisterCubit extends Cubit<RegisterStates> {
     emit(RegisterChangeVisPassState());
   }
 
-
-  void createUserRegister({@required context,@required String name,@required String phone,@required String email,@required String password,}) {
+  void createUserRegister({
+    @required context,
+    @required String name,
+    @required String phone,
+    @required String email,
+    @required String password,
+  }) async {
+    if (await checkInternet()) {
       emit(RegisterLoadingState());
 
-      FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: password
-      ).then((value) {
-        print(value.user.email + " "+value.user.uid);
+      FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        print(value.user.email + " " + value.user.uid);
         uId = value.user.uid;
         Cache_Helper.setData('uid', uId);
         saveUserRegister(
+          context: context,
           uid: value.user.uid,
-          email:email,
+          email: email,
           name: name,
           phone: phone,
-          image:'https://image.freepik.com/free-photo/portrait-smiling-young-man-eyewear_171337-4842.jpg',
+          image:
+              'https://image.freepik.com/free-photo/portrait-smiling-young-man-eyewear_171337-4842.jpg',
         );
-        NavigateToAndKill(context,HomeLayout());
+        NavigateToAndKill(context, HomeLayout());
         emit(RegisterSuccessState(false));
-      }).catchError((onError){
-
+      }).catchError((onError) {
         emit(RegisterErrorState());
       });
+    } else
+      showSnackBar(context);
   }
 
   void saveUserRegister({
@@ -55,18 +63,22 @@ class RegisterCubit extends Cubit<RegisterStates> {
     @required String email,
     @required String uid,
     @required String image,
-  }) {
-    emit(RegisterLoadingState());
-    Map<String,dynamic> data =LoginModel(name,phone,email,uid,image).toMap();
-    FirebaseFirestore.instance.collection('users').doc(uid).set(
-      data
-    ).then((value) {
-
-      emit(RegisterSuccessState(true));
-    }).catchError((onError){
-      print(onError.toString());
-      emit(RegisterErrorState());
-    });
+  }) async {
+    if (await checkInternet()) {
+      emit(RegisterLoadingState());
+      Map<String, dynamic> data =
+          LoginModel(name, phone, email, uid, image).toMap();
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .set(data)
+          .then((value) {
+        emit(RegisterSuccessState(true));
+      }).catchError((onError) {
+        print(onError.toString());
+        emit(RegisterErrorState());
+      });
+    } else
+      showSnackBar(context);
   }
-
 }

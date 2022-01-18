@@ -1,5 +1,6 @@
 import 'package:Hayah_Clinic/modules/register_screen/cubit/register_cubit.dart';
 import 'package:Hayah_Clinic/modules/register_screen/cubit/register_cubit_states.dart';
+import 'package:Hayah_Clinic/shared/styles/colors.dart';
 import 'package:Hayah_Clinic/shared/widgets/DefualtTextButton.dart';
 import 'package:Hayah_Clinic/shared/widgets/TitleText.dart';
 import 'package:conditional_builder/conditional_builder.dart';
@@ -33,14 +34,14 @@ class RegisterScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TitleText('Register'),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       DefaultTextFormField(
                         hint: 'User Name',
                         validate: (value) {
                           if (value.isEmpty) {
-                            return 'Enter the Username';
+                            return 'User Name Must Not Be Empty';
                           }
                           return null;
                         },
@@ -48,14 +49,14 @@ class RegisterScreen extends StatelessWidget {
                         controller: name,
                         type: TextInputType.text,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15.0,
                       ),
                       DefaultTextFormField(
-                        hint: 'Email',
+                        hint: 'Email Address',
                         validate: (value) {
                           if (value.isEmpty) {
-                            return 'Enter the Email';
+                            return 'Email Address Must Not Be Empty';
                           }
                           return null;
                         },
@@ -76,11 +77,11 @@ class RegisterScreen extends StatelessWidget {
                         },
                         prefixicon: Icon(Icons.lock),
                         controller: pass,
-                        type: TextInputType.emailAddress,
+                        type: TextInputType.visiblePassword,
                         hint: 'password',
                         validate: (value) {
                           if (value.isEmpty) {
-                            return 'Enter the Password';
+                            return 'password Must Not Be Empty';
                           }
                           return null;
                         },
@@ -95,20 +96,20 @@ class RegisterScreen extends StatelessWidget {
                         hint: 'Phone',
                         validate: (value) {
                           if (value.isEmpty) {
-                            return 'Enter the Phone';
+                            return 'Phone Must Not Be Empty';
                           }
                           return null;
                         },
                       ),
                       SizedBox(
-                        height: 15.0,
+                        height: 30.0,
                       ),
 
 
                       ConditionalBuilder(
                         condition: state is !RegisterLoadingState,
-                        builder: (context) => DefualtButton(
-                            color: Colors.amber,
+                        builder: (context) => DefaultButton(
+                            color: defColor,
                             fun: () {
                               if (keysss.currentState.validate()) {
                                 cubit.createUserRegister(
@@ -120,7 +121,7 @@ class RegisterScreen extends StatelessWidget {
                                 );
                               }
                             },
-                            child: Text('Register')),
+                            child: Text('Register'.toUpperCase() ,style: Theme.of(context).textTheme.bodyText2,)),
                         fallback: (context) => Center(child: CircularProgressIndicator()),
                       ),
                     ],
