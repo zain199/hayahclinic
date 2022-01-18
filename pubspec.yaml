@@ -51,6 +51,10 @@ dependencies:
   cached_network_image: ^3.2.0
   google_sign_in: ^4.5.6
   font_awesome_flutter: ^8.10.0
+  connectivity: ^3.0.6
+  responsive_framework: ^0.1.5
+
+
 
 
 
@@ -66,11 +70,11 @@ dev_dependencies:
 #  ios: true
 
 
-#flutter_native_splash:
-#  color: "#3e3b3c"
-#  image: assets/images/icon.png
-#  andriod: true
-#  ios: true
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/splash.png
+  andriod: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

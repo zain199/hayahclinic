@@ -8,14 +8,13 @@ import 'package:Hayah_Clinic/shared/widgets/DefualtTextFormField.dart';
 import 'package:Hayah_Clinic/shared/widgets/GoogleSignInButton.dart';
 import 'package:Hayah_Clinic/shared/widgets/TitleText.dart';
 import 'package:conditional_builder/conditional_builder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController email = TextEditingController();
   final TextEditingController pass = TextEditingController();
-  final GlobalKey<FormState> keysss = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class LoginScreen extends StatelessWidget {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Form(
-                  key: keysss,
+                  key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -57,6 +56,7 @@ class LoginScreen extends StatelessWidget {
                               height: 20.0,
                             ),
                             DefaultTextFormField(
+                              controller: email,
                               hint: 'Email Address',
                               validate: (value) {
                                 if (value.isEmpty) {
@@ -65,13 +65,13 @@ class LoginScreen extends StatelessWidget {
                                 return null;
                               },
                               prefixicon: Icon(Icons.email),
-                              controller: email,
                               type: TextInputType.emailAddress,
                             ),
                             const SizedBox(
                               height: 15.0,
                             ),
                             DefaultTextFormField(
+                              controller: pass,
                               suffixicon: cubit.isPassword
                                   ? Icons.visibility
                                   : Icons.visibility_off,
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                                 cubit.setVis();
                               },
                               onSubmitted: (value) {
-                                if (keysss.currentState.validate())
+                                if (formKey.currentState.validate())
                                   cubit.userLogin(
                                       context: context,
                                       email: email.text,
@@ -87,8 +87,6 @@ class LoginScreen extends StatelessWidget {
                               },
                               isPassword: cubit.isPassword,
                               prefixicon: Icon(Icons.lock),
-                              controller: pass,
-                              type: TextInputType.visiblePassword,
                               hint: 'Password',
                               validate: (value) {
                                 if (value.isEmpty) {
@@ -96,6 +94,8 @@ class LoginScreen extends StatelessWidget {
                                 }
                                 return null;
                               },
+                              type: TextInputType.visiblePassword,
+
                             ),
                             const SizedBox(
                               height: 20.0,
@@ -108,7 +108,7 @@ class LoginScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(18.0)),
                                 child: DefaultButton(
                                     fun: () {
-                                      if (keysss.currentState.validate())
+                                      if (formKey.currentState.validate())
                                         cubit.userLogin(
                                             context: context,
                                             email: email.text,
@@ -123,7 +123,7 @@ class LoginScreen extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10.0,
                             ),
                             GoogleSignInButton(),
